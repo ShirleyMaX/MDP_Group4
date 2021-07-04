@@ -1,0 +1,29 @@
+from picamera import PiCamera
+from time import sleep
+import cv2
+import numpy as np
+import os.path
+
+#camera = PiCamera()
+#camera.start_preview()
+#sleep(2)
+#Capture = camera.capture("picture.jpg")
+#camera.stop_preview()
+
+Original=cv2.imread("Number_0.jpg")
+Test = cv2.imread('ImagesTrain/picture.jpg')
+#cv2.imshow("Original",Original)
+#cv2.waitKey(0)
+
+if(os.path.isfile("./picture.jpg")):
+    sift = cv2.xfeatures2d.SIFT_create()
+    kp_1, desc_1 = sift.detectAndCompute(Original, None)
+    kp_2, desc_2 = sift.detectAndCompute(Test, None)
+
+    index_params = dict(algorithm=0, trees=5)
+    search_params = dict()
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    matches = flann.knnMatch(desc_1, desc_2, k=2)
+    print(len(matches))
+
+   
